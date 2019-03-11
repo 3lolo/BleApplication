@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.bleapplication.Constants.CHARACTERISTIC_ECHO_UUID;
 import static com.example.bleapplication.Constants.SCAN_PERIOD;
 import static com.example.bleapplication.Constants.SERVICE_UUID;
 
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements GattClientActionL
         mBinding.startScanningButton.setOnClickListener(v -> startScan());
         mBinding.stopScanningButton.setOnClickListener(v -> stopScan());
         mBinding.sendMessageButton.setOnClickListener(v -> sendMessage());
+
         mBinding.disconnectButton.setOnClickListener(v -> disconnectGattServer());
         mBinding.viewClientLog.clearLogButton.setOnClickListener(v -> clearLogs());
     }
@@ -118,15 +120,15 @@ public class MainActivity extends AppCompatActivity implements GattClientActionL
         // Unless the full UUID of the server is known, manual filtering may be necessary.
         // For example, when looking for a brand of device that contains a char sequence in the UUID
         ScanFilter scanFilter = new ScanFilter.Builder()
-                .setServiceUuid(new ParcelUuid(SERVICE_UUID))
+//                .setServiceUuid(new ParcelUuid(CHARACTERISTIC_ECHO_UUID))
                 .build();
         List<ScanFilter> filters = new ArrayList<>();
         filters.add(scanFilter);
 
         ScanSettings settings = new ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
+                .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
                 .build();
-
+//        mBluetoothLeScanner.startScan(mScanCallback);
         mBluetoothLeScanner.startScan(filters, settings, mScanCallback);
 
         mHandler = new Handler();
@@ -163,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements GattClientActionL
 //                    true);
 //            binding.setViewModel(viewModel);
 //            binding.connectGattServerButton.setOnClickListener(v -> connectDevice(device));
+            connectDevice(device);
         }
     }
 
@@ -200,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements GattClientActionL
             mScanResults = scanResults;
         }
 
+
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             addScanResult(result);
@@ -218,6 +222,12 @@ public class MainActivity extends AppCompatActivity implements GattClientActionL
         }
 
         private void addScanResult(ScanResult result) {
+//            if (!"64:BD:DC:EE:82:CB".equals(result.getDevice().getAddress())) return;
+            if (mScanResults.containsKey(result.getDevice().getAddress())) return;
+//            final BleAdvertisedData badata = BleUtil.parseAdertisedData();
+            log("addScanResult to " + result.getDevice().getAddress());
+
+            result.getScanRecord().getDeviceName();
             BluetoothDevice device = result.getDevice();
             String deviceAddress = device.getAddress();
             mScanResults.put(deviceAddress, device);
@@ -230,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements GattClientActionL
         log("Connecting to " + device.getAddress());
         GattClientCallback gattClientCallback = new GattClientCallback(this);
         mGatt = device.connectGatt(this, false, gattClientCallback);
+        if (mGatt == null) return;
     }
 
     // Messaging
@@ -303,6 +314,7 @@ public class MainActivity extends AppCompatActivity implements GattClientActionL
     @Override
     public void setConnected(boolean connected) {
         mConnected = connected;
+        log("connected - " + connected);
     }
 
     @Override

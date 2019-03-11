@@ -16,7 +16,7 @@ public class Constants {
 
     public static final String CLIENT_CONFIGURATION_DESCRIPTOR_SHORT_ID = "2902";
 
-    public static final long SCAN_PERIOD = 5000;
+    public static final long SCAN_PERIOD = 10000;
 
 
 }

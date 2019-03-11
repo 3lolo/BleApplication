@@ -149,12 +149,12 @@ public class ServerActivity extends AppCompatActivity {
         AdvertiseSettings settings = new AdvertiseSettings.Builder().setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED)
                 .setConnectable(true)
                 .setTimeout(0)
-                .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_LOW)
+//                .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_LOW)
                 .build();
 
         ParcelUuid parcelUuid = new ParcelUuid(SERVICE_UUID);
         AdvertiseData data = new AdvertiseData.Builder().setIncludeDeviceName(true)
-                .addServiceUuid(parcelUuid)
+//                .addServiceUuid(parcelUuid)
                 .build();
 
         mBluetoothLeAdvertiser.startAdvertising(settings, data, mAdvertiseCallback);
@@ -199,6 +199,7 @@ public class ServerActivity extends AppCompatActivity {
 
     public void log(String msg) {
         Log.d(TAG, msg);
+
     }
 
     // Gatt Server Action Listener

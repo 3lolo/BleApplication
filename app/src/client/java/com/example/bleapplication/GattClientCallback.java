@@ -118,6 +118,7 @@ public class GattClientCallback extends BluetoothGattCallback {
                 enableCharacteristicConfigurationDescriptor(gatt, characteristic);
             }
         } else {
+            gatt.disconnect();
             mClientActionListener.logError("Characteristic notification set failure for " + characteristic.getUuid().toString());
         }
     }
