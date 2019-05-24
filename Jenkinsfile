@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('compile') {
       steps {
-        sh './gradlew compileDebugSources'
+        sh './gradlew assembleDebug'
       }
     }
     stage('Test') {
